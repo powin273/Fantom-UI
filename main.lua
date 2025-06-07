@@ -2,113 +2,86 @@
     Fantom UI
 
 ]]
+return function()
+    local UserInputService = game:GetService("UserInputService")
+    local CoreGui = game:GetService("CoreGui")
 
-
-local HttpService = game:GetService("HttpService")
-local UserInputService = game:GetService("UserInputService")
-local CoreGui = game:GetService("CoreGui")
-local Players = game:GetService("Players")
-
-local Fantom = {}
-
-Fantom.Windows = {}
-
-function Fantom:CreateWindow(config)
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = config.Name or "FantomUI"
-    ScreenGui.Parent = CoreGui
+    ScreenGui.Name = "FantomUI"
     ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = CoreGui
 
     local Window = Instance.new("Frame")
-    Window.Size = config.Size or UDim2.new(0, 600, 0, 400)
-    Window.Position = UDim2.new(0.5, -300, 0.5, -200)
+    Window.Name = "Window"
+    Window.Size = UDim2.new(0, 700, 0, 500)
+    Window.Position = UDim2.new(0.5, -350, 0.5, -250)
     Window.AnchorPoint = Vector2.new(0.5, 0.5)
-    Window.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    Window.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     Window.BorderSizePixel = 0
     Window.Parent = ScreenGui
 
-    local corner = Instance.new("UICorner", Window)
-    corner.CornerRadius = UDim.new(0, 12)
+    local UICorner = Instance.new("UICorner", Window)
+    UICorner.CornerRadius = UDim.new(0, 16)
 
-    local Title = Instance.new("TextLabel")
-    Title.Size = UDim2.new(1, 0, 0, 40)
-    Title.BackgroundTransparency = 1
-    Title.TextColor3 = Color3.new(1,1,1)
-    Title.Font = Enum.Font.GothamBold
-    Title.TextSize = 20
-    Title.Text = config.Name or "Fantom UI"
-    Title.Parent = Window
+    local UIStroke = Instance.new("UIStroke", Window)
+    UIStroke.Color = Color3.fromRGB(120, 120, 120)
+    UIStroke.Transparency = 0.4
 
-    local dragging, dragInput, dragStart, startPos
+    local TabContainer = Instance.new("Frame")
+    TabContainer.Name = "TabContainer"
+    TabContainer.Size = UDim2.new(1, 0, 0, 40)
+    TabContainer.BackgroundTransparency = 1
+    TabContainer.Parent = Window
 
-    local function update(input)
-        local delta = input.Position - dragStart
-        Window.Position = UDim2.new(
-            startPos.X.Scale,
-            startPos.X.Offset + delta.X,
-            startPos.Y.Scale,
-            startPos.Y.Offset + delta.Y
-        )
-    end
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Position = UDim2.new(0, 0, 0, 40)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -40)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Parent = Window
 
-    Window.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = Window.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
+    local Tabs = {}
 
-    Window.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
+    local function CreateTab(name, icon)
+        local button = Instance.new("TextButton")
+        button.Text = name
+        button.Size = UDim2.new(0, 120, 1, 0)
+        button.BackgroundTransparency = 1
+        button.TextColor3 = Color3.fromRGB(255, 255, 255)
+        button.Font = Enum.Font.Gotham
+        button.TextSize = 14
+        button.Parent = TabContainer
 
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input == dragInput then
-            update(input)
-        end
-    end)
+        local tabFrame = Instance.new("Frame")
+        tabFrame.Name = name
+        tabFrame.Size = UDim2.new(1, 0, 1, 0)
+        tabFrame.Visible = false
+        tabFrame.BackgroundTransparency = 1
+        tabFrame.Parent = ContentFrame
 
-    if config.ConfigurationSaving and config.ConfigurationSaving.Enabled then
-        local configFileName = config.ConfigurationSaving.FileName or "FantomConfig"
-        local success, savedConfig = pcall(function()
-            return readfile(configFileName)
+        table.insert(Tabs, {
+            Name = name,
+            Button = button,
+            Frame = tabFrame
+        })
+
+        button.MouseButton1Click:Connect(function()
+            for _, tab in ipairs(Tabs) do
+                tab.Frame.Visible = false
+            end
+            tabFrame.Visible = true
         end)
 
-        if success then
-            local decoded = HttpService:JSONDecode(savedConfig)
+        if #Tabs == 1 then
+            tabFrame.Visible = true
         end
 
-        function saveConfig(data)
-            local json = HttpService:JSONEncode(data)
-            writefile(configFileName, json)
-        end
+        return tabFrame
     end
 
-    if config.Discord and config.Discord.Enabled then
-        local discordLabel = Instance.new("TextLabel")
-        discordLabel.Size = UDim2.new(1, 0, 0, 30)
-        discordLabel.Position = UDim2.new(0, 0, 0, 40)
-        discordLabel.BackgroundTransparency = 1
-        discordLabel.TextColor3 = Color3.fromRGB(100, 150, 255)
-        discordLabel.Text = "Join Discord: ".. (config.Discord.Invite or "")
-        discordLabel.Font = Enum.Font.Gotham
-        discordLabel.TextSize = 16
-        discordLabel.Parent = Window
-    end
-
-    if config.KeySystem then
-    end
-
-    table.insert(self.Windows, Window)
-    return Window
+    return {
+        Instance = Window,
+        CreateTab = CreateTab
+    }
 end
-
-return Fantom

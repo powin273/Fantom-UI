@@ -1,49 +1,42 @@
-local SaveManager = require(path_to_SaveManager)
+local SaveManager = {}
+
+local HttpService = game:GetService("HttpService")
 local UserInputService = game:GetService("UserInputService")
 
-local Window = script.Parent.Window 
+SaveManager.Filename = "FantomUI_SaveData"
+SaveManager.Window = nil
 
-SaveManager:SetUI(Window)
-SaveManager:Load()
-
-local dragging = false
-local dragInput
-local dragStart
-local startPos
-
-local function update(input)
-    local delta = input.Position - dragStart
-    Window.Position = UDim2.new(
-        startPos.X.Scale,
-        startPos.X.Offset + delta.X,
-        startPos.Y.Scale,
-        startPos.Y.Offset + delta.Y
-    )
+function SaveManager:SetUI(window)
+    self.Window = window
 end
 
-Window.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        dragging = true
-        dragStart = input.Position
-        startPos = Window.Position
+function SaveManager:Save()
+    if not self.Window then return end
+    local data = {
+        Position = {
+            X = self.Window.Position.X.Offset,
+            Y = self.Window.Position.Y.Offset,
+        }
+    }
+    local json = HttpService:JSONEncode(data)
 
-        input.Changed:Connect(function()
-            if input.UserInputState == Enum.UserInputState.End then
-                dragging = false
-                SaveManager:Save() -- บันทึกตำแหน่งเมื่อปล่อยเมาส์
-            end
-        end)
-    end
-end)
+    game:SetFastFlagForUserId(123456789, "FantomUI_SaveData", json)
+end
 
-Window.InputChanged:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseMovement then
-        dragInput = input
-    end
-end)
+function SaveManager:Load()
+    if not self.Window then return end
 
-UserInputService.InputChanged:Connect(function(input)
-    if dragging and input == dragInput then
-        update(input)
+    local success, json = pcall(function()
+        return game:GetFastFlag("FantomUI_SaveData")
+    end)
+    if success and json then
+        local data = HttpService:JSONDecode(json)
+        if data and data.Position then
+            local x = data.Position.X or self.Window.Position.X.Offset
+            local y = data.Position.Y or self.Window.Position.Y.Offset
+            self.Window.Position = UDim2.new(self.Window.Position.X.Scale, x, self.Window.Position.Y.Scale, y)
+        end
     end
-end)
+end
+
+return SaveManager

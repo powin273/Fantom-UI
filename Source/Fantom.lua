@@ -1,83 +1,50 @@
-return function()
-    local CoreGui = game:GetService("CoreGui")
+function Window:CreateTab(name)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(0, 140, 0, 40)
+    TabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TabButton.Font = Enum.Font.GothamSemibold
+    TabButton.TextSize = 14
+    TabButton.Text = name
+    TabButton.BorderSizePixel = 0
+    TabButton.Parent = self.TabContainer -- สมมติว่าคุณมี Frame ที่เก็บปุ่ม Tab
 
-    local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "FantomUI"
-    ScreenGui.ResetOnSpawn = false
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    ScreenGui.Parent = CoreGui
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 10)
+    TabCorner.Parent = TabButton
 
-    local Window = Instance.new("Frame")
-    Window.Name = "MainWindow"
-    Window.Size = UDim2.new(0, 600, 0, 400)
-    Window.Position = UDim2.new(0.5, -300, 0.5, -200)
-    Window.AnchorPoint = Vector2.new(0.5, 0.5)
-    Window.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Window.BorderSizePixel = 0
-    Window.Parent = ScreenGui
+    local TabStroke = Instance.new("UIStroke")
+    TabStroke.Color = Color3.fromRGB(90, 90, 90)
+    TabStroke.Thickness = 1
+    TabStroke.Transparency = 0.4
+    TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    TabStroke.Parent = TabButton
 
-    local UICorner = Instance.new("UICorner", Window)
-    UICorner.CornerRadius = UDim.new(0, 12)
+    -- สร้าง Frame สำหรับเนื้อหาใน Tab
+    local TabContent = Instance.new("Frame")
+    TabContent.Size = UDim2.new(1, 0, 1, -50)
+    TabContent.Position = UDim2.new(0, 0, 0, 50)
+    TabContent.BackgroundTransparency = 1
+    TabContent.Visible = false
+    TabContent.Parent = self.ContentHolder -- Frame ที่เก็บเนื้อหาทั้งหมด
 
-    local TabBar = Instance.new("Frame")
-    TabBar.Name = "TabBar"
-    TabBar.Size = UDim2.new(1, 0, 0, 40)
-    TabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-    TabBar.Parent = Window
-
-    local TabLayout = Instance.new("UIListLayout", TabBar)
-    TabLayout.FillDirection = Enum.FillDirection.Horizontal
-    TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabLayout.Padding = UDim.new(0, 6)
-
-    local ContentFrame = Instance.new("Frame")
-    ContentFrame.Name = "Content"
-    ContentFrame.Position = UDim2.new(0, 0, 0, 40)
-    ContentFrame.Size = UDim2.new(1, 0, 1, -40)
-    ContentFrame.BackgroundTransparency = 1
-    ContentFrame.Parent = Window
-
-    local Tabs = {}
-
-    local FantomWindow = {}
-
-    function FantomWindow:CreateTab(name)
-        local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(0, 120, 1, 0)
-        TabButton.Text = name
-        TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-        TabButton.Font = Enum.Font.Gotham
-        TabButton.TextSize = 14
-        TabButton.Parent = TabBar
-
-        local TabFrame = Instance.new("Frame")
-        TabFrame.Size = UDim2.new(1, 0, 1, 0)
-        TabFrame.BackgroundTransparency = 1
-        TabFrame.Visible = false
-        TabFrame.Parent = ContentFrame
-
-        for _, t in pairs(Tabs) do
-            t.Frame.Visible = false
-        end
-        TabFrame.Visible = true
-
-        TabButton.MouseButton1Click:Connect(function()
-            for _, t in pairs(Tabs) do
-                t.Frame.Visible = false
+    -- เมื่อกดปุ่ม Tab ให้แสดงเฉพาะเนื้อหาของ Tab นี้
+    TabButton.MouseButton1Click:Connect(function()
+        for _, content in pairs(self.ContentHolder:GetChildren()) do
+            if content:IsA("Frame") then
+                content.Visible = false
             end
-            TabFrame.Visible = true
-        end)
+        end
+        TabContent.Visible = true
+    end)
 
-        table.insert(Tabs, {Button = TabButton, Frame = TabFrame})
-        return TabFrame
+    -- คืนค่า object Tab (คุณอาจเพิ่มฟังก์ชันเพิ่มเติมได้)
+    local tabObj = {}
+    function tabObj:AddSection(name)
+        -- สร้าง Section ใน TabContent ได้
     end
 
-    return setmetatable(FantomWindow, {
-        __index = function(self, key)
-            if key == "Instance" then
-                return Window
-            end
-        end
-    })
+    tabObj.Content = TabContent
+    tabObj.Button = TabButton
+    return tabObj
 end

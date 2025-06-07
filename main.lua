@@ -3,8 +3,8 @@
 
 ]]
 return function()
-    local UserInputService = game:GetService("UserInputService")
     local CoreGui = game:GetService("CoreGui")
+    local UserInputService = game:GetService("UserInputService")
 
     local ScreenGui = Instance.new("ScreenGui")
     ScreenGui.Name = "FantomUI"
@@ -13,29 +13,35 @@ return function()
     ScreenGui.Parent = CoreGui
 
     local Window = Instance.new("Frame")
-    Window.Name = "Window"
-    Window.Size = UDim2.new(0, 700, 0, 500)
-    Window.Position = UDim2.new(0.5, -350, 0.5, -250)
+    Window.Name = "MainWindow"
+    Window.Size = UDim2.new(0, 640, 0, 480)
+    Window.Position = UDim2.new(0.5, -320, 0.5, -240)
     Window.AnchorPoint = Vector2.new(0.5, 0.5)
     Window.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     Window.BorderSizePixel = 0
     Window.Parent = ScreenGui
 
     local UICorner = Instance.new("UICorner", Window)
-    UICorner.CornerRadius = UDim.new(0, 16)
+    UICorner.CornerRadius = UDim.new(0, 12)
 
     local UIStroke = Instance.new("UIStroke", Window)
     UIStroke.Color = Color3.fromRGB(120, 120, 120)
+    UIStroke.Thickness = 1
     UIStroke.Transparency = 0.4
 
-    local TabContainer = Instance.new("Frame")
-    TabContainer.Name = "TabContainer"
-    TabContainer.Size = UDim2.new(1, 0, 0, 40)
-    TabContainer.BackgroundTransparency = 1
-    TabContainer.Parent = Window
+    local TabBar = Instance.new("Frame")
+    TabBar.Name = "TabBar"
+    TabBar.Size = UDim2.new(1, 0, 0, 40)
+    TabBar.BackgroundTransparency = 1
+    TabBar.Parent = Window
+
+    local TabLayout = Instance.new("UIListLayout", TabBar)
+    TabLayout.FillDirection = Enum.FillDirection.Horizontal
+    TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabLayout.Padding = UDim.new(0, 6)
 
     local ContentFrame = Instance.new("Frame")
-    ContentFrame.Name = "ContentFrame"
+    ContentFrame.Name = "Content"
     ContentFrame.Position = UDim2.new(0, 0, 0, 40)
     ContentFrame.Size = UDim2.new(1, 0, 1, -40)
     ContentFrame.BackgroundTransparency = 1
@@ -43,41 +49,40 @@ return function()
 
     local Tabs = {}
 
-    local function CreateTab(name, icon)
-        local button = Instance.new("TextButton")
-        button.Text = name
-        button.Size = UDim2.new(0, 120, 1, 0)
-        button.BackgroundTransparency = 1
-        button.TextColor3 = Color3.fromRGB(255, 255, 255)
-        button.Font = Enum.Font.Gotham
-        button.TextSize = 14
-        button.Parent = TabContainer
+    local function CreateTab(Name)
+        local TabButton = Instance.new("TextButton")
+        TabButton.Size = UDim2.new(0, 120, 1, 0)
+        TabButton.Text = Name
+        TabButton.Font = Enum.Font.GothamBold
+        TabButton.TextSize = 14
+        TabButton.BackgroundColor3 = Color3.fromRGB(35,35,35)
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.Parent = TabBar
 
-        local tabFrame = Instance.new("Frame")
-        tabFrame.Name = name
-        tabFrame.Size = UDim2.new(1, 0, 1, 0)
-        tabFrame.Visible = false
-        tabFrame.BackgroundTransparency = 1
-        tabFrame.Parent = ContentFrame
+        local TabFrame = Instance.new("Frame")
+        TabFrame.Name = Name
+        TabFrame.Size = UDim2.new(1, 0, 1, 0)
+        TabFrame.BackgroundTransparency = 1
+        TabFrame.Visible = false
+        TabFrame.Parent = ContentFrame
 
-        table.insert(Tabs, {
-            Name = name,
-            Button = button,
-            Frame = tabFrame
-        })
-
-        button.MouseButton1Click:Connect(function()
+        TabButton.MouseButton1Click:Connect(function()
             for _, tab in ipairs(Tabs) do
                 tab.Frame.Visible = false
             end
-            tabFrame.Visible = true
+            TabFrame.Visible = true
         end)
 
+        table.insert(Tabs, {
+            Button = TabButton,
+            Frame = TabFrame
+        })
+
         if #Tabs == 1 then
-            tabFrame.Visible = true
+            TabFrame.Visible = true
         end
 
-        return tabFrame
+        return TabFrame
     end
 
     return {
@@ -85,3 +90,4 @@ return function()
         CreateTab = CreateTab
     }
 end
+

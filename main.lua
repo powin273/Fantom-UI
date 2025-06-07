@@ -3,30 +3,40 @@
 
 
 ]]
+local HttpService = game:GetService("HttpService")
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
 
 local Fantom = {}
 
 Fantom.Windows = {}
 
 function Fantom:CreateWindow(config)
-    local UserInputService = game:GetService("UserInputService")
-    local CoreGui = game:GetService("CoreGui")
-
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = config.Title or "FantomUI"
-    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Name = config.Name or "FantomUI"
     ScreenGui.Parent = CoreGui
+    ScreenGui.ResetOnSpawn = false
 
     local Window = Instance.new("Frame")
-    Window.Size = config.Size or UDim2.new(0, 700, 0, 480)
-    Window.Position = UDim2.new(0.5, -(Window.Size.X.Offset / 2), 0.5, -(Window.Size.Y.Offset / 2))
+    Window.Size = config.Size or UDim2.new(0, 600, 0, 400)
+    Window.Position = UDim2.new(0.5, -300, 0.5, -200)
     Window.AnchorPoint = Vector2.new(0.5, 0.5)
-    Window.BackgroundColor3 = config.BackgroundColor or Color3.fromRGB(25, 25, 25)
+    Window.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Window.BorderSizePixel = 0
     Window.Parent = ScreenGui
 
-    local UICorner = Instance.new("UICorner", Window)
-    UICorner.CornerRadius = UDim.new(0, 16)
+    local corner = Instance.new("UICorner", Window)
+    corner.CornerRadius = UDim.new(0, 12)
+
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.BackgroundTransparency = 1
+    Title.TextColor3 = Color3.new(1,1,1)
+    Title.Font = Enum.Font.GothamBold
+    Title.TextSize = 20
+    Title.Text = config.Name or "Fantom UI"
+    Title.Parent = Window
 
     local dragging, dragInput, dragStart, startPos
 
@@ -45,7 +55,6 @@ function Fantom:CreateWindow(config)
             dragging = true
             dragStart = input.Position
             startPos = Window.Position
-
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -66,8 +75,38 @@ function Fantom:CreateWindow(config)
         end
     end)
 
-    table.insert(self.Windows, Window)
+    if config.ConfigurationSaving and config.ConfigurationSaving.Enabled then
+        local configFileName = config.ConfigurationSaving.FileName or "FantomConfig"
+        local success, savedConfig = pcall(function()
+            return readfile(configFileName)
+        end)
 
+        if success then
+            local decoded = HttpService:JSONDecode(savedConfig)
+        end
+
+        function saveConfig(data)
+            local json = HttpService:JSONEncode(data)
+            writefile(configFileName, json)
+        end
+    end
+
+    if config.Discord and config.Discord.Enabled then
+        local discordLabel = Instance.new("TextLabel")
+        discordLabel.Size = UDim2.new(1, 0, 0, 30)
+        discordLabel.Position = UDim2.new(0, 0, 0, 40)
+        discordLabel.BackgroundTransparency = 1
+        discordLabel.TextColor3 = Color3.fromRGB(100, 150, 255)
+        discordLabel.Text = "Join Discord: ".. (config.Discord.Invite or "")
+        discordLabel.Font = Enum.Font.Gotham
+        discordLabel.TextSize = 16
+        discordLabel.Parent = Window
+    end
+
+    if config.KeySystem then
+    end
+
+    table.insert(self.Windows, Window)
     return Window
 end
 

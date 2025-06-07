@@ -1,46 +1,83 @@
-local Fantom = {}
-Fantom.Version = "1.0"
-
-function Fantom:CreateWindow(options)
-    local UserInputService = game:GetService("UserInputService")
+return function()
     local CoreGui = game:GetService("CoreGui")
 
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = options.Title or "FantomUI"
+    ScreenGui.Name = "FantomUI"
     ScreenGui.ResetOnSpawn = false
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     ScreenGui.Parent = CoreGui
 
     local Window = Instance.new("Frame")
-    Window.Name = "Window"
-    Window.Size = options.Size or UDim2.new(0, 700, 0, 480)
-    Window.Position = UDim2.new(0.5, -Window.Size.X.Offset/2, 0.5, -Window.Size.Y.Offset/2)
+    Window.Name = "MainWindow"
+    Window.Size = UDim2.new(0, 600, 0, 400)
+    Window.Position = UDim2.new(0.5, -300, 0.5, -200)
     Window.AnchorPoint = Vector2.new(0.5, 0.5)
-    Window.BackgroundColor3 = options.BackgroundColor or Color3.fromRGB(25, 25, 25)
+    Window.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     Window.BorderSizePixel = 0
-    Window.ClipsDescendants = true
     Window.Parent = ScreenGui
 
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 16)
-    Corner.Parent = Window
+    local UICorner = Instance.new("UICorner", Window)
+    UICorner.CornerRadius = UDim.new(0, 12)
 
-    local Stroke = Instance.new("UIStroke")
-    Stroke.Color = options.StrokeColor or Color3.fromRGB(100, 100, 100)
-    Stroke.Thickness = options.StrokeThickness or 2
-    Stroke.Transparency = options.StrokeTransparency or 0.4
-    Stroke.Parent = Window
+    local TabBar = Instance.new("Frame")
+    TabBar.Name = "TabBar"
+    TabBar.Size = UDim2.new(1, 0, 0, 40)
+    TabBar.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    TabBar.Parent = Window
 
-    local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Text = options.Title or "Fantom UI"
-    TitleLabel.Size = UDim2.new(1, 0, 0, 40)
-    TitleLabel.BackgroundTransparency = 1
-    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    TitleLabel.Font = Enum.Font.GothamBold
-    TitleLabel.TextSize = 24
-    TitleLabel.Parent = Window
+    local TabLayout = Instance.new("UIListLayout", TabBar)
+    TabLayout.FillDirection = Enum.FillDirection.Horizontal
+    TabLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TabLayout.Padding = UDim.new(0, 6)
 
-    return Window
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Name = "Content"
+    ContentFrame.Position = UDim2.new(0, 0, 0, 40)
+    ContentFrame.Size = UDim2.new(1, 0, 1, -40)
+    ContentFrame.BackgroundTransparency = 1
+    ContentFrame.Parent = Window
+
+    local Tabs = {}
+
+    local FantomWindow = {}
+
+    function FantomWindow:CreateTab(name)
+        local TabButton = Instance.new("TextButton")
+        TabButton.Size = UDim2.new(0, 120, 1, 0)
+        TabButton.Text = name
+        TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.Font = Enum.Font.Gotham
+        TabButton.TextSize = 14
+        TabButton.Parent = TabBar
+
+        local TabFrame = Instance.new("Frame")
+        TabFrame.Size = UDim2.new(1, 0, 1, 0)
+        TabFrame.BackgroundTransparency = 1
+        TabFrame.Visible = false
+        TabFrame.Parent = ContentFrame
+
+        for _, t in pairs(Tabs) do
+            t.Frame.Visible = false
+        end
+        TabFrame.Visible = true
+
+        TabButton.MouseButton1Click:Connect(function()
+            for _, t in pairs(Tabs) do
+                t.Frame.Visible = false
+            end
+            TabFrame.Visible = true
+        end)
+
+        table.insert(Tabs, {Button = TabButton, Frame = TabFrame})
+        return TabFrame
+    end
+
+    return setmetatable(FantomWindow, {
+        __index = function(self, key)
+            if key == "Instance" then
+                return Window
+            end
+        end
+    })
 end
-
-return Fantom

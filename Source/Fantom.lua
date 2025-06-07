@@ -7,7 +7,7 @@ function Window:CreateTab(name)
     TabButton.TextSize = 14
     TabButton.Text = name
     TabButton.BorderSizePixel = 0
-    TabButton.Parent = self.TabContainer -- สมมติว่าคุณมี Frame ที่เก็บปุ่ม Tab
+    TabButton.Parent = self.TabContainer 
 
     local TabCorner = Instance.new("UICorner")
     TabCorner.CornerRadius = UDim.new(0, 10)
@@ -20,15 +20,14 @@ function Window:CreateTab(name)
     TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     TabStroke.Parent = TabButton
 
-    -- สร้าง Frame สำหรับเนื้อหาใน Tab
+
     local TabContent = Instance.new("Frame")
     TabContent.Size = UDim2.new(1, 0, 1, -50)
     TabContent.Position = UDim2.new(0, 0, 0, 50)
     TabContent.BackgroundTransparency = 1
     TabContent.Visible = false
-    TabContent.Parent = self.ContentHolder -- Frame ที่เก็บเนื้อหาทั้งหมด
+    TabContent.Parent = self.ContentHolder 
 
-    -- เมื่อกดปุ่ม Tab ให้แสดงเฉพาะเนื้อหาของ Tab นี้
     TabButton.MouseButton1Click:Connect(function()
         for _, content in pairs(self.ContentHolder:GetChildren()) do
             if content:IsA("Frame") then
@@ -38,10 +37,9 @@ function Window:CreateTab(name)
         TabContent.Visible = true
     end)
 
-    -- คืนค่า object Tab (คุณอาจเพิ่มฟังก์ชันเพิ่มเติมได้)
     local tabObj = {}
     function tabObj:AddSection(name)
-        -- สร้าง Section ใน TabContent ได้
+
     end
 
     tabObj.Content = TabContent

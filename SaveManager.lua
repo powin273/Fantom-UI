@@ -1,7 +1,7 @@
 local SaveManager = require(path_to_SaveManager)
 local UserInputService = game:GetService("UserInputService")
 
-local Window = script.Parent.Window -- อ้างถึง UI Frame ของคุณ
+local Window = script.Parent.Window 
 
 SaveManager:SetUI(Window)
 SaveManager:Load()

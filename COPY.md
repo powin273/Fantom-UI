@@ -1,7 +1,7 @@
 # Misc
 
 ```diff
-local normal = loadstring(game:HttpGet(('https://raw.githubusercontent.com/Lucifer4381/ui-normal-hub/main/scr')))()
+local normal = loadstring(game:HttpGet(('https://raw.githubusercontent.com/powin273/Fantom-UI/refs/heads/main/Fantom.lua')))()
 ```
 
 # Create Window

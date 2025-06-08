@@ -396,14 +396,14 @@ function library:Evil(text,text2,logo)
 	local Welcome = Instance.new("TextLabel")
 
 	Main.Name = "Main"
-	Main.Parent = UI
-	Main.BackgroundColor3 = Color3.fromRGB(11, 12, 13)
-	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Main.Size = UDim2.new(0, 700, 0, 500)
-	Main.ClipsDescendants = true
-	Main.AnchorPoint = Vector2.new(0.5, 0.5)
-
-	Main:TweenSize(UDim2.new(0, 800, 0, 600), "Out", "Quad", 0.4, true)
+    Main.Parent = UI
+    Main.BackgroundColor3 = Color3.fromRGB(11, 12, 13)
+    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Main.Size = UDim2.new(0, 200, 0, 200)
+    Main.AnchorPoint = Vector2.new(0.5, 0.5)
+    Main.ClipsDescendants = true
+    wait(0.5)
+    Main:TweenSize(UDim2.new(0, 700, 0, 450), "Out", "Quad", 0.4, true)
 
     local Top2 = Instance.new("Frame")
     Top2.Name = "Top2"

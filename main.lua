@@ -9,6 +9,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "FantomUI"
 ScreenGui.Parent = game:GetService("CoreGui")
 ScreenGui.ResetOnSpawn = false
+ScreenGui.IgnoreGuiInset = true
 
 local Main = Instance.new("Frame")
 Main.Size = UDim2.new(0, 600, 0, 400)
@@ -16,6 +17,8 @@ Main.Position = UDim2.new(0.5, -300, 0.5, -200)
 Main.AnchorPoint = Vector2.new(0.5, 0.5)
 Main.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 Main.BorderSizePixel = 0
+Main.Active = true
+Main.Draggable = false
 Main.Parent = ScreenGui
 
 local UICorner = Instance.new("UICorner", Main)
@@ -26,6 +29,8 @@ Header.Size = UDim2.new(1, 0, 0, 40)
 Header.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 Header.BorderSizePixel = 0
 Header.Parent = Main
+Header.Active = true
+Header.Selectable = true
 
 local HeaderCorner = Instance.new("UICorner", Header)
 HeaderCorner.CornerRadius = UDim.new(0, 12)
@@ -41,7 +46,8 @@ Title.TextSize = 18
 Title.TextXAlignment = Enum.TextXAlignment.Left
 Title.Parent = Header
 
-local dragging, dragInput, dragStart, startPos
+local dragging = false
+local dragInput, dragStart, startPos
 
 local function update(input)
 	local delta = input.Position - dragStart
@@ -58,7 +64,6 @@ Header.InputBegan:Connect(function(input)
 		dragging = true
 		dragStart = input.Position
 		startPos = Main.Position
-
 		input.Changed:Connect(function()
 			if input.UserInputState == Enum.UserInputState.End then
 				dragging = false

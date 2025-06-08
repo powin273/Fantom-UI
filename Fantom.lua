@@ -403,8 +403,8 @@ function library:Evil(text,text2,logo)
 	Main.ClipsDescendants = true
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 
-	Main:TweenSize(UDim2.new(0,585,0,400),"Out","Quad",0.4,true)
-	
+	Main:TweenSize(UDim2.new(0, 800, 0, 600), "Out", "Quad", 0.4, true)
+
     local Top2 = Instance.new("Frame")
     Top2.Name = "Top2"
 	Top2.Parent = Main

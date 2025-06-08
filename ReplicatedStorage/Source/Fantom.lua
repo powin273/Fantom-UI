@@ -191,6 +191,74 @@ function Fantom:CreateWindow(config)
             return btn
         end
 
+        function tab:CreateToggle(info)
+    local toggleState = info.CurrentValue or false
+
+    local toggleFrame = Instance.new("Frame")
+    toggleFrame.Size = UDim2.new(1, -20, 0, 40)
+    toggleFrame.Position = UDim2.new(0, 10, 0, (#tab.Content:GetChildren() * 45))
+    toggleFrame.BackgroundColor3 = Color3.fromRGB(50, 38, 75)
+    toggleFrame.BorderSizePixel = 0
+    toggleFrame.Parent = tab.Content
+
+    local corner = Instance.new("UICorner")
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = toggleFrame
+
+    local label = Instance.new("TextLabel")
+    label.Text = info.Name or "Toggle"
+    label.Size = UDim2.new(1, -60, 1, 0)
+    label.Position = UDim2.new(0, 10, 0, 0)
+    label.BackgroundTransparency = 1
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    label.Font = Enum.Font.Gotham
+    label.TextSize = 14
+    label.TextXAlignment = Enum.TextXAlignment.Left
+    label.Parent = toggleFrame
+
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 40, 0, 20)
+    button.Position = UDim2.new(1, -50, 0.5, -10)
+    button.AnchorPoint = Vector2.new(0, 0.5)
+    button.BackgroundColor3 = toggleState and Color3.fromRGB(120, 200, 120) or Color3.fromRGB(80, 80, 80)
+    button.Text = toggleState and "ON" or "OFF"
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    button.Font = Enum.Font.GothamBold
+    button.TextSize = 12
+    button.Parent = toggleFrame
+
+    local btnCorner = Instance.new("UICorner")
+    btnCorner.CornerRadius = UDim.new(1, 0)
+    btnCorner.Parent = button
+
+    button.MouseButton1Click:Connect(function()
+        toggleState = not toggleState
+        button.Text = toggleState and "ON" or "OFF"
+        button.BackgroundColor3 = toggleState and Color3.fromRGB(120, 200, 120) or Color3.fromRGB(80, 80, 80)
+        if info.Callback then
+            task.spawn(function()
+                info.Callback(toggleState)
+            end)
+        end
+    end)
+
+    return {
+        Set = function(_, value)
+            toggleState = value
+            button.Text = toggleState and "ON" or "OFF"
+            button.BackgroundColor3 = toggleState and Color3.fromRGB(120, 200, 120) or Color3.fromRGB(80, 80, 80)
+            if info.Callback then
+                task.spawn(function()
+                    info.Callback(toggleState)
+                end)
+            end
+        end,
+        Get = function()
+            return toggleState
+        end
+    }
+end
+
         return tab
     end
 

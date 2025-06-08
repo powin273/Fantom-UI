@@ -1,4 +1,32 @@
+local Window = {}
+Window.__index = Window
+
+function Window.new()
+    local self = setmetatable({}, Window)
+
+    self.MainFrame = Instance.new("Frame")
+    self.MainFrame.Size = UDim2.new(0, 600, 0, 400)
+    self.MainFrame.Position = UDim2.new(0.5, -300, 0.5, -200)
+    self.MainFrame.AnchorPoint = Vector2.new(0.5, 0.5)
+    self.MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    self.MainFrame.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui"):WaitForChild("ScreenGui") -- หรือจะกำหนดตามต้องการ
+
+    self.TabContainer = Instance.new("Frame")
+    self.TabContainer.Size = UDim2.new(1, 0, 0, 40)
+    self.TabContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    self.TabContainer.Parent = self.MainFrame
+
+    self.ContentHolder = Instance.new("Frame")
+    self.ContentHolder.Size = UDim2.new(1, 0, 1, -40)
+    self.ContentHolder.Position = UDim2.new(0, 0, 0, 40)
+    self.ContentHolder.BackgroundTransparency = 1
+    self.ContentHolder.Parent = self.MainFrame
+
+    return self
+end
+
 function Window:CreateTab(name)
+    -- โค้ดฟังก์ชัน CreateTab ตามที่ให้มา
     local TabButton = Instance.new("TextButton")
     TabButton.Size = UDim2.new(0, 100, 0, 32)  
     TabButton.BackgroundColor3 = Color3.fromRGB(75, 50, 130) 
@@ -72,3 +100,5 @@ function Window:CreateTab(name)
     tabObj.Button = TabButton
     return tabObj
 end
+
+return Window

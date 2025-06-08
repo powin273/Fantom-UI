@@ -1,68 +1,74 @@
-local Tabs = {}
+function Window:CreateTab(name)
+    local TabButton = Instance.new("TextButton")
+    TabButton.Size = UDim2.new(0, 100, 0, 32)  
+    TabButton.BackgroundColor3 = Color3.fromRGB(75, 50, 130) 
+    TabButton.TextColor3 = Color3.fromRGB(230, 230, 255)
+    TabButton.Font = Enum.Font.GothamSemibold
+    TabButton.TextSize = 15
+    TabButton.Text = name
+    TabButton.BorderSizePixel = 0
+    TabButton.Parent = self.TabContainer 
 
-function CreateTabContainer(Main)
-	local TabBar = Instance.new("Frame")
-	TabBar.Size = UDim2.new(1, 0, 0, 40)
-	TabBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	TabBar.BorderSizePixel = 0
-	TabBar.Parent = Main
+    local TabCorner = Instance.new("UICorner")
+    TabCorner.CornerRadius = UDim.new(0, 12)  
+    TabCorner.Parent = TabButton
 
-	local UIListLayout = Instance.new("UIListLayout", TabBar)
-	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-	UIListLayout.Padding = UDim.new(0, 4)
-	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    local TabStroke = Instance.new("UIStroke")
+    TabStroke.Color = Color3.fromRGB(110, 90, 140) 
+    TabStroke.Thickness = 1.5
+    TabStroke.Transparency = 0
+    TabStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+    TabStroke.Parent = TabButton
 
-	local TabContentFrame = Instance.new("Frame")
-	TabContentFrame.Size = UDim2.new(1, 0, 1, -40)
-	TabContentFrame.Position = UDim2.new(0, 0, 0, 40)
-	TabContentFrame.BackgroundTransparency = 1
-	TabContentFrame.Name = "TabContent"
-	TabContentFrame.Parent = Main
+    local TabContent = Instance.new("Frame")
+    TabContent.Size = UDim2.new(1, 0, 1, -40)
+    TabContent.Position = UDim2.new(0, 0, 0, 40)
+    TabContent.BackgroundTransparency = 1
+    TabContent.Visible = false
+    TabContent.Parent = self.ContentHolder 
 
-	return TabBar, TabContentFrame
-end
+    TabButton.MouseButton1Click:Connect(function()
+        for _, content in pairs(self.ContentHolder:GetChildren()) do
+            if content:IsA("Frame") then
+                content.Visible = false
+            end
+        end
+        TabContent.Visible = true
+       
+        for _, btn in pairs(self.TabContainer:GetChildren()) do
+            if btn:IsA("TextButton") then
+                btn.BackgroundColor3 = Color3.fromRGB(75, 50, 130) 
+            end
+        end
+        TabButton.BackgroundColor3 = Color3.fromRGB(120, 85, 190) 
+    end)
 
-function CreateTab(Main, TabBar, TabContentFrame, name)
-	local Button = Instance.new("TextButton")
-	Button.Size = UDim2.new(0, 120, 1, 0)
-	Button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-	Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Button.Font = Enum.Font.GothamBold
-	Button.TextSize = 14
-	Button.Text = name
-	Button.BorderSizePixel = 0
-	Button.Parent = TabBar
+    local tabObj = {}
+    function tabObj:AddSection(name)
+        local section = Instance.new("Frame")
+        section.Size = UDim2.new(1, -20, 0, 100)
+        section.Position = UDim2.new(0, 10, 0, #TabContent:GetChildren() * 110)
+        section.BackgroundColor3 = Color3.fromRGB(40, 30, 70)
+        section.BorderSizePixel = 0
+        section.Parent = TabContent
 
-	local Corner = Instance.new("UICorner", Button)
-	Corner.CornerRadius = UDim.new(0, 8)
+        local sectionCorner = Instance.new("UICorner")
+        sectionCorner.CornerRadius = UDim.new(0, 10)
+        sectionCorner.Parent = section
 
-	local Content = Instance.new("Frame")
-	Content.Size = UDim2.new(1, 0, 1, 0)
-	Content.BackgroundTransparency = 1
-	Content.Visible = false
-	Content.Parent = TabContentFrame
+        local label = Instance.new("TextLabel")
+        label.Text = name
+        label.Size = UDim2.new(1, 0, 0, 25)
+        label.BackgroundTransparency = 1
+        label.TextColor3 = Color3.fromRGB(220, 220, 255)
+        label.Font = Enum.Font.GothamBold
+        label.TextSize = 16
+        label.Parent = section
 
-	local function ActivateTab()
-		for _, tab in pairs(TabContentFrame:GetChildren()) do
-			if tab:IsA("Frame") then
-				tab.Visible = false
-			end
-		end
-		for _, btn in pairs(TabBar:GetChildren()) do
-			if btn:IsA("TextButton") then
-				btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-			end
-		end
+        return section
+    end
 
-		Content.Visible = true
-		Button.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
-	end
-
-	Button.MouseButton1Click:Connect(ActivateTab)
-
-	if #TabContentFrame:GetChildren() == 1 then
-		ActivateTab()
-	end
-
-	return Content
+    tabObj.Content = TabContent
+    tabObj.Button = TabButton
+    return tabObj
 end

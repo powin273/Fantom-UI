@@ -1,4 +1,4 @@
-_G.Color = Color3.fromRGB(0, 0, 255)
+_G.Color = Color3.fromRGB(152, 251, 152) 
 _G.Logo = 14714307716
 
 do  
@@ -396,146 +396,150 @@ function library:Evil(text,text2,logo)
 	local Welcome = Instance.new("TextLabel")
 
 	Main.Name = "Main"
-    Main.Parent = UI
-    Main.BackgroundColor3 = Color3.fromRGB(11, 12, 13)
-    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.Size = UDim2.new(0, 200, 0, 200)
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.ClipsDescendants = true
-    wait(0.3)
-    Main:TweenSize(UDim2.new(0, 700, 0, 450), "Out", "Quad", 0.4, true)
+	Main.Parent = UI
+	Main.BackgroundColor3 = Color3.fromRGB(11, 12, 13)
+	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
+	Main.Size = UDim2.new(0, 0, 0, 0)
+	Main.ClipsDescendants = true
+	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 
+	Main:TweenSize(UDim2.new(0,585,0,400),"Out","Quad",0.4,true)
+	
     local Top2 = Instance.new("Frame")
-Top2.Name = "Top2"
-Top2.Parent = Main
-Top2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-Top2.BackgroundTransparency = 0
-Top2.Position = UDim2.new(0, 0, 0, 0)
-Top2.Size = UDim2.new(1, 0, 1, 0) -- ปรับให้เต็ม Main Frame
-local UICorner_59 = Instance.new("UICorner")
-UICorner_59.CornerRadius = UDim.new(0, 5)
-UICorner_59.Parent = Top2
+    Top2.Name = "Top2"
+	Top2.Parent = Main
+	Top2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+	Top2.BackgroundTransparency = 0
+	Top2.Position = UDim2.new(0, 0, 0, 0)
+	Top2.Size = UDim2.new(0, 585, 0, 45)
 
-local UIStroke96 = Instance.new("UIStroke")
-UIStroke96.Thickness = 3.2
-UIStroke96.Parent = Main
-UIStroke96.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-UIStroke96.LineJoinMode = Enum.LineJoinMode.Round
-UIStroke96.Color = _G.Color or Color3.fromRGB(128, 0, 128) -- สีม่วงถ้า _G.Color ไม่มี
-UIStroke96.Transparency = 0.10
+    local UICorner_59 = Instance.new("UICorner")
+    UICorner_59.CornerRadius = UDim.new(0, 5)
+	UICorner_59.Parent = Top2
 
--- Logo
-local Logo = Instance.new("ImageLabel")
-Logo.Name = "Logo"
-Logo.Parent = Main
-Logo.Active = true
-Logo.AnchorPoint = Vector2.new(0, 0)
-Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-Logo.BackgroundTransparency = 1
-Logo.Position = UDim2.new(0, 10, 0, 10)
-Logo.Size = UDim2.new(0, 30, 0, 30)
-Logo.ImageTransparency = 0
-Logo.Image = "rbxassetid://" .. (logo or 13732317842)
+	local UIStroke96 = Instance.new("UIStroke")
+	UIStroke96.Thickness = 3.2
+	UIStroke96.Parent = Main
+	UIStroke96.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	UIStroke96.LineJoinMode = Enum.LineJoinMode.Round
+	UIStroke96.Color = _G.Color
+	UIStroke96.Transparency = 0.10
+	
+	Logo.Name = "Logo"
+	Logo.Parent = Main
+	Logo.Active = true
+	Logo.AnchorPoint = Vector2.new(0,0)
+	Logo.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Logo.BackgroundTransparency = 1.000
+	Logo.Position = UDim2.new(0, 10, 0, 10)
+	Logo.Size = UDim2.new(0, 30, 0, 30)
+	Logo.ImageTransparency = 0
+	Logo.Image = "rbxassetid://"..(logo or 13732317842)
 
--- Title
-local Title = Instance.new("TextLabel")
-Title.Name = "Title"
-Title.Parent = Main
-Title.BackgroundTransparency = 1
-Title.Position = UDim2.new(0, 50, 0, 10) -- เว้นห่างจาก Logo เล็กน้อย
-Title.Size = UDim2.new(0.6, 0, 0, 31)
-Title.Font = Enum.Font.GothamMedium
-Title.Text = text or "Your Title"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextSize = 17
-Title.TextWrapped = true
-Title.TextXAlignment = Enum.TextXAlignment.Left
+	Title.Name = "Title"
+	Title.Parent = Main
+	Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title.BackgroundTransparency = 1.000
+	Title.Position = UDim2.new(0, 45, 0, 10)
+	Title.Size = UDim2.new(0, 483, 0, 31)
+	Title.Font = Enum.Font.GothamMedium
+	Title.Text = text
+	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+	Title.TextSize = 17.000
+	Title.TextWrapped = true
+	Title.TextXAlignment = Enum.TextXAlignment.Left
 
--- Title2 (รอง)
-local Title2 = Instance.new("TextLabel")
-Title2.Name = "Title2"
-Title2.Parent = Main
-Title2.BackgroundTransparency = 1
-Title2.Position = UDim2.new(0.65, 0, 0, 10)
-Title2.Size = UDim2.new(0.3, 0, 0, 31)
-Title2.Font = Enum.Font.GothamMedium
-Title2.Text = text2 or "Subtitle"
-Title2.TextColor3 = _G.Color or Color3.fromRGB(128, 0, 128)
-Title2.TextSize = 17
-Title2.TextWrapped = true
-Title2.TextXAlignment = Enum.TextXAlignment.Left
+	Title2.Name = "Title2"
+	Title2.Parent = Main
+	Title2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Title2.BackgroundTransparency = 1.000
+	Title2.Position = UDim2.new(0, 95, 0, 10)
+	Title2.Size = UDim2.new(0, 483, 0, 31)
+	Title2.Font = Enum.Font.GothamMedium
+	Title2.Text = text2
+	Title2.TextColor3 = _G.Color
+	Title2.TextSize = 17.000
+	Title2.TextWrapped = true
+	Title2.TextXAlignment = Enum.TextXAlignment.Left
 
--- Top bar
-local Top = Instance.new("Frame")
-Top.Name = "Top"
-Top.Parent = Main
-Top.BackgroundTransparency = 1
-Top.Position = UDim2.new(0.02, 0, 0, 50) -- เลื่อนลงมาจาก Title
-Top.Size = UDim2.new(0.8, 0, 0, 39)
+	local UiToggle_UiStroke1 = Instance.new("UIStroke")
 
--- TabHolder
-local TabHolder = Instance.new("Frame")
-TabHolder.Name = "TabHolder"
-TabHolder.Parent = Top
-TabHolder.BackgroundTransparency = 1
-TabHolder.Position = UDim2.new(0.15, 0, 0, 0)
-TabHolder.Size = UDim2.new(0.75, 0, 1, 0)
-local UICorner_2 = Instance.new("UICorner")
-UICorner_2.Parent = TabHolder
+	UiToggle_UiStroke1.Color = Color3.fromRGB(25,25,25)
+	UiToggle_UiStroke1.Thickness = 2
+	UiToggle_UiStroke1.Name = "UiToggle_UiStroke1"
+	UiToggle_UiStroke1.Parent = Main
 
--- TabContainer (Scroll)
-local TabContainer = Instance.new("ScrollingFrame")
-TabContainer.Name = "TabContainer"
-TabContainer.Parent = TabHolder
-TabContainer.Active = true
-TabContainer.BackgroundTransparency = 1
-TabContainer.Size = UDim2.new(1, 0, 1, 0)
-TabContainer.CanvasSize = UDim2.new(2, 0, 0, 0)
-TabContainer.ScrollBarThickness = 1
-TabContainer.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+	UICorner.CornerRadius = UDim.new(0, 6)
+	UICorner.Parent = Main
 
-local UIListLayout = Instance.new("UIListLayout")
-UIListLayout.Parent = TabContainer
-UIListLayout.FillDirection = Enum.FillDirection.Horizontal
-UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-UIListLayout.Padding = UDim.new(0, 10)
-UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-    TabContainer.CanvasSize = UDim2.new(0, UIListLayout.AbsoluteContentSize.X, 0, 0)
-end)
+	Top.Name = "Top"
+	Top.Parent = Main
+	Top.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Top.BackgroundTransparency = 1
+	Top.Position = UDim2.new(0.021956088, 0, 0, 10)
+	Top.Size = UDim2.new(0, 565, 0, 39)
+	
+	local ClickFrame = Instance.new("Frame")
+	ClickFrame.Name = "Top"
+	ClickFrame.Parent = Main
+	ClickFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	ClickFrame.BackgroundTransparency = 1
+	ClickFrame.Position = UDim2.new(0, 0, 0, 0)
+	ClickFrame.Size = UDim2.new(0, 600, 0, 35)
 
-local UIPadding = Instance.new("UIPadding")
-UIPadding.Parent = TabContainer
-UIPadding.PaddingLeft = UDim.new(0, 5)
-UIPadding.PaddingTop = UDim.new(0, 5)
+	TabHolder.Name = "TabHolder"
+	TabHolder.Parent = Top
+	TabHolder.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TabHolder.Position = UDim2.new(0, 120, 0, 0)
+	TabHolder.BackgroundTransparency = 1.000
+	TabHolder.Size = UDim2.new(0, 450, 0, 38)
 
--- Bottom frame
-local Bottom = Instance.new("Frame")
-Bottom.Name = "Bottom"
-Bottom.Parent = Main
-Bottom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-Bottom.BackgroundTransparency = 0.9 -- ลดโปร่งใสลงหน่อย
-Bottom.Position = UDim2.new(0.01, 0, 0.14, 0) -- เลื่อนลงมาจาก Top bar
-Bottom.Size = UDim2.new(0.98, 0, 0.7, 0)
-local UICorner_Bottom = Instance.new("UICorner")
-UICorner_Bottom.CornerRadius = UDim.new(0, 6)
-UICorner_Bottom.Parent = Bottom
+	UICorner_2.Parent = TabHolder
 
--- Toggle UI ด้วยปุ่ม (Binding Key)
-local uitoggled = false
-UserInputService.InputBegan:Connect(function(io, p)
-    if io.KeyCode == UIConfig.Bind then
-        if uitoggled == false then
-            Main:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.4, true)
-            wait(0.4)
-            UI.Enabled = false
-            uitoggled = true
-        else
-            UI.Enabled = true
-            Main:TweenSize(UDim2.new(0, 700, 0, 500), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.4, true)
-            uitoggled = false
-        end
-    end
-end)
+	TabContainer.Name = "TabContainer"
+	TabContainer.Parent = TabHolder
+	TabContainer.Active = true
+	TabContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	TabContainer.BackgroundTransparency = 1.000
+	TabContainer.Size = UDim2.new(0, 450, 0, 38)
+	TabContainer.CanvasSize = UDim2.new(2, 0, 0, 0)
+	TabContainer.ScrollBarThickness = 1
+	TabContainer.VerticalScrollBarInset = Enum.ScrollBarInset.Always
+
+	UIListLayout.Parent = TabContainer
+	UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+	UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+	UIListLayout.Padding = UDim.new(0, 10)
+	UIListLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(
+	function()
+		TabContainer.CanvasSize = UDim2.new(0, UIListLayout.AbsoluteContentSize.X, 0, 0)
+	end)
+	UIPadding.Parent = TabContainer
+	UIPadding.PaddingLeft = UDim.new(0, 5)
+	UIPadding.PaddingTop = UDim.new(0, 5)
+	local Bottom = Instance.new("Frame")
+	Bottom.Name = "Bottom"
+	Bottom.Parent = Main
+	Bottom.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+	Bottom.BackgroundTransparency = 1.000
+	Bottom.Position = UDim2.new(0.0119760484, 7, 0, 55)
+	Bottom.Size = UDim2.new(0, 500, 0, 320)
+
+	local uitoggled = false
+	UserInputService.InputBegan:Connect(
+		function(io, p)
+			if io.KeyCode == UIConfig.Bind then
+				if uitoggled == false then
+					Main:TweenSize(UDim2.new(0, 0, 0, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quart, 0.4, true) wait(0.4) UI.Enabled = false
+					uitoggled = true
+				else
+					UI.Enabled = true
+					Main:TweenSize(UDim2.new(0, 585, 0, 400), Enum.EasingDirection.Out, Enum.EasingStyle.Quart,0.4,true)
+					uitoggled = false
+				end
+			end
+		end
+	)
 
 	dragify(ClickFrame, Main)
 	local tabs = {}

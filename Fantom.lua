@@ -402,7 +402,7 @@ function library:Evil(text,text2,logo)
     Main.Size = UDim2.new(0, 200, 0, 200)
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
     Main.ClipsDescendants = true
-    wait(0.5)
+    wait(0.3)
     Main:TweenSize(UDim2.new(0, 700, 0, 450), "Out", "Quad", 0.4, true)
 
     local Top2 = Instance.new("Frame")

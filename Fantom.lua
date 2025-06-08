@@ -411,7 +411,7 @@ function library:Evil(text,text2,logo)
 	Top2.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 	Top2.BackgroundTransparency = 0
 	Top2.Position = UDim2.new(0, 0, 0, 0)
-	Top2.Size = UDim2.new(0, 585, 0, 45)
+	Top2.Size = UDim2.new(0, 700, 0, 450)
 
     local UICorner_59 = Instance.new("UICorner")
     UICorner_59.CornerRadius = UDim.new(0, 5)

@@ -146,6 +146,51 @@ function Fantom:CreateWindow(config)
             label.Parent = tab.Content
         end
 
+        function tab:CreateSection(sectionName)
+            local section = Instance.new("Frame")
+            section.Name = sectionName
+            section.Size = UDim2.new(1, -20, 0, 100)
+            section.Position = UDim2.new(0, 10, 0, #self.Content:GetChildren() * 110)
+            section.BackgroundColor3 = Color3.fromRGB(40,30,70)
+            section.BorderSizePixel = 0
+            section.Parent = self.Content
+
+            local corner = Instance.new("UICorner", section)
+            corner.CornerRadius = UDim.new(0,10)
+
+            local label = Instance.new("TextLabel")
+            label.Text = sectionName
+            label.Size = UDim2.new(1, 0, 0, 25)
+            label.BackgroundTransparency = 1
+            label.TextColor3 = Color3.fromRGB(220,220,255)
+            label.Font = Enum.Font.GothamBold
+            label.TextSize = 16
+            label.Parent = section
+
+            return section
+        end
+
+        function tab:CreateButton(info)
+            local btn = Instance.new("TextButton")
+            btn.Size = UDim2.new(1, -20, 0, 30)
+            btn.Position = UDim2.new(0, 10, 0, #self.Content:GetChildren() * 40 + 40)
+            btn.BackgroundColor3 = Color3.fromRGB(60,50,100)
+            btn.TextColor3 = Color3.fromRGB(255,255,255)
+            btn.Font = Enum.Font.GothamSemibold
+            btn.TextSize = 14
+            btn.Text = info.Name
+            btn.Parent = self.Content
+
+            local cr = Instance.new("UICorner", btn)
+            cr.CornerRadius = UDim.new(0,6)
+
+            if info.Callback then
+                btn.MouseButton1Click:Connect(info.Callback)
+            end
+
+            return btn
+        end
+
         return tab
     end
 

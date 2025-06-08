@@ -2,114 +2,56 @@ local Fantom = {}
 Fantom.__index = Fantom
 
 function Fantom:CreateWindow(config)
-    local self = setmetatable({}, Fantom)
-    
-    local player = game.Players.LocalPlayer
-    local playerGui = player:WaitForChild("PlayerGui")
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = config.Name or "FantomUI"
-    screenGui.ResetOnSpawn = false
-    screenGui.Parent = playerGui
-    self.ScreenGui = screenGui
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = config.Name or "FantomUI"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 
     local Main = Instance.new("Frame")
     Main.Size = config.Size or UDim2.new(0, 600, 0, 400)
-    Main.Position = config.Position or UDim2.new(0.5, 0, 0.5, 0)
+    Main.Position = config.Position or UDim2.new(0.5, -300, 0.5, -200)
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
     Main.BackgroundColor3 = config.BackgroundColor or Color3.fromRGB(25, 25, 25)
     Main.BorderSizePixel = 0
-    Main.Parent = screenGui
-    self.MainFrame = Main
+    Main.Parent = ScreenGui
 
-    self:MakeDraggable(Main)
+    local UICorner = Instance.new("UICorner")
+    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.Parent = Main
 
+    local UIStroke = Instance.new("UIStroke")
+    UIStroke.Color = config.StrokeColor or Color3.fromRGB(80, 80, 80)
+    UIStroke.Thickness = 1
+    UIStroke.Parent = Main
+
+    -- Tab bar
     local TabBar = Instance.new("Frame")
     TabBar.Size = UDim2.new(1, 0, 0, 40)
-    TabBar.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    TabBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     TabBar.BorderSizePixel = 0
     TabBar.Parent = Main
-    self.TabBar = TabBar
 
     local UIListLayout = Instance.new("UIListLayout")
     UIListLayout.FillDirection = Enum.FillDirection.Horizontal
+    UIListLayout.Padding = UDim.new(0, 8)
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    UIListLayout.Padding = UDim.new(0, 4)
     UIListLayout.Parent = TabBar
 
+    -- Content container
     local ContentHolder = Instance.new("Frame")
     ContentHolder.Size = UDim2.new(1, 0, 1, -40)
     ContentHolder.Position = UDim2.new(0, 0, 0, 40)
     ContentHolder.BackgroundTransparency = 1
     ContentHolder.Parent = Main
-    self.ContentHolder = ContentHolder
 
-    self.Tabs = {}
-
-    return self
-end
-
-function Fantom:CreateTab(name)
-    local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(0, 120, 1, 0)
-    Button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.Font = Enum.Font.GothamBold
-    Button.TextSize = 14
-    Button.Text = name
-    Button.BorderSizePixel = 0
-    Button.Parent = self.TabBar
-
-    local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 8)
-    Corner.Parent = Button
-
-    local Content = Instance.new("Frame")
-    Content.Size = UDim2.new(1, 0, 1, 0)
-    Content.BackgroundTransparency = 1
-    Content.Visible = false
-    Content.Parent = self.ContentHolder
-
-    local function ActivateTab()
-        for _, tab in pairs(self.ContentHolder:GetChildren()) do
-            if tab:IsA("Frame") then
-                tab.Visible = false
-            end
-        end
-        for _, btn in pairs(self.TabBar:GetChildren()) do
-            if btn:IsA("TextButton") then
-                btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-            end
-        end
-        Content.Visible = true
-        Button.BackgroundColor3 = Color3.fromRGB(70, 120, 180)
-    end
-
-    Button.MouseButton1Click:Connect(ActivateTab)
-
-    if #self.Tabs == 0 then
-        ActivateTab()
-    end
-
-    local tabObj = {
-        Button = Button,
-        Content = Content,
-        Activate = ActivateTab
-    }
-    table.insert(self.Tabs, tabObj)
-
-    return tabObj
-end
-
-function Fantom:MakeDraggable(frame)
+    -- Dragging functionality
     local UserInputService = game:GetService("UserInputService")
-    local dragging
-    local dragInput
-    local dragStart
-    local startPos
+    local dragging = false
+    local dragStart, startPos
 
     local function update(input)
         local delta = input.Position - dragStart
-        frame.Position = UDim2.new(
+        Main.Position = UDim2.new(
             startPos.X.Scale,
             startPos.X.Offset + delta.X,
             startPos.Y.Scale,
@@ -117,11 +59,11 @@ function Fantom:MakeDraggable(frame)
         )
     end
 
-    frame.InputBegan:Connect(function(input)
+    Main.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
-            startPos = frame.Position
+            startPos = Main.Position
 
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
@@ -131,17 +73,87 @@ function Fantom:MakeDraggable(frame)
         end
     end)
 
-    frame.InputChanged:Connect(function(input)
+    Main.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
+            UserInputService.InputChanged:Connect(function(moveInput)
+                if moveInput == input and dragging then
+                    update(moveInput)
+                end
+            end)
         end
     end)
 
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging and input == dragInput then
-            update(input)
+    local windowObj = {}
+    windowObj.Main = Main
+    windowObj.TabBar = TabBar
+    windowObj.ContentHolder = ContentHolder
+    windowObj.Tabs = {}
+
+    function windowObj:CreateTab(name)
+        local TabButton = Instance.new("TextButton")
+        TabButton.Size = UDim2.new(0, 120, 1, 0)
+        TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        TabButton.Font = Enum.Font.GothamBold
+        TabButton.TextSize = 14
+        TabButton.Text = name
+        TabButton.BorderSizePixel = 0
+        TabButton.Parent = TabBar
+
+        local Corner = Instance.new("UICorner")
+        Corner.CornerRadius = UDim.new(0, 8)
+        Corner.Parent = TabButton
+
+        local Content = Instance.new("Frame")
+        Content.Size = UDim2.new(1, 0, 1, 0)
+        Content.BackgroundTransparency = 1
+        Content.Visible = false
+        Content.Parent = ContentHolder
+
+        local function ActivateTab()
+            for _, tabContent in pairs(ContentHolder:GetChildren()) do
+                if tabContent:IsA("Frame") then
+                    tabContent.Visible = false
+                end
+            end
+            for _, btn in pairs(TabBar:GetChildren()) do
+                if btn:IsA("TextButton") then
+                    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+                end
+            end
+
+            Content.Visible = true
+            TabButton.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
         end
-    end)
+
+        TabButton.MouseButton1Click:Connect(ActivateTab)
+
+        -- เปิด Tab แรกอัตโนมัติ
+        if #ContentHolder:GetChildren() == 1 then
+            ActivateTab()
+        end
+
+        local tab = {}
+        tab.Button = TabButton
+        tab.Content = Content
+
+        function tab:AddLabel(text)
+            local label = Instance.new("TextLabel")
+            label.Size = UDim2.new(1, -20, 0, 30)
+            label.Position = UDim2.new(0, 10, 0, (#tab.Content:GetChildren() * 30))
+            label.BackgroundTransparency = 1
+            label.TextColor3 = Color3.fromRGB(255, 255, 255)
+            label.Font = Enum.Font.Gotham
+            label.TextSize = 14
+            label.Text = text
+            label.TextXAlignment = Enum.TextXAlignment.Left
+            label.Parent = tab.Content
+        end
+
+        return tab
+    end
+
+    return windowObj
 end
 
 return Fantom

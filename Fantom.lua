@@ -399,7 +399,7 @@ function library:Evil(text,text2,logo)
 	Main.Parent = UI
 	Main.BackgroundColor3 = Color3.fromRGB(11, 12, 13)
 	Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-	Main.Size = UDim2.new(0, 600, 0, 300)
+	Main.Size = UDim2.new(0, 700, 0, 500)
 	Main.ClipsDescendants = true
 	Main.AnchorPoint = Vector2.new(0.5, 0.5)
 

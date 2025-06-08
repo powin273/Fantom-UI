@@ -11,23 +11,22 @@ function Fantom:CreateWindow(config)
     Main.Size = config.Size or UDim2.new(0, 600, 0, 400)
     Main.Position = config.Position or UDim2.new(0.5, -300, 0.5, -200)
     Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = config.BackgroundColor or Color3.fromRGB(25, 25, 25)
+    Main.BackgroundColor3 = config.BackgroundColor or Color3.fromRGB(60, 42, 86) 
     Main.BorderSizePixel = 0
     Main.Parent = ScreenGui
 
     local UICorner = Instance.new("UICorner")
-    UICorner.CornerRadius = UDim.new(0, 12)
+    UICorner.CornerRadius = UDim.new(0, 16)
     UICorner.Parent = Main
 
     local UIStroke = Instance.new("UIStroke")
-    UIStroke.Color = config.StrokeColor or Color3.fromRGB(80, 80, 80)
-    UIStroke.Thickness = 1
+    UIStroke.Color = config.StrokeColor or Color3.fromRGB(110, 90, 140) 
+    UIStroke.Thickness = 1.5
     UIStroke.Parent = Main
 
-    -- Tab bar
     local TabBar = Instance.new("Frame")
     TabBar.Size = UDim2.new(1, 0, 0, 40)
-    TabBar.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    TabBar.BackgroundColor3 = Color3.fromRGB(50, 38, 75)
     TabBar.BorderSizePixel = 0
     TabBar.Parent = Main
 
@@ -37,14 +36,12 @@ function Fantom:CreateWindow(config)
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Parent = TabBar
 
-    -- Content container
     local ContentHolder = Instance.new("Frame")
     ContentHolder.Size = UDim2.new(1, 0, 1, -40)
     ContentHolder.Position = UDim2.new(0, 0, 0, 40)
     ContentHolder.BackgroundTransparency = 1
     ContentHolder.Parent = Main
 
-    -- Dragging functionality
     local UserInputService = game:GetService("UserInputService")
     local dragging = false
     local dragStart, startPos
@@ -91,17 +88,17 @@ function Fantom:CreateWindow(config)
 
     function windowObj:CreateTab(name)
         local TabButton = Instance.new("TextButton")
-        TabButton.Size = UDim2.new(0, 120, 1, 0)
-        TabButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+        TabButton.Size = UDim2.new(0, 90, 1, 0)
+        TabButton.BackgroundColor3 = Color3.fromRGB(90, 72, 140)
         TabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
         TabButton.Font = Enum.Font.GothamBold
-        TabButton.TextSize = 14
+        TabButton.TextSize = 13 
         TabButton.Text = name
         TabButton.BorderSizePixel = 0
         TabButton.Parent = TabBar
 
         local Corner = Instance.new("UICorner")
-        Corner.CornerRadius = UDim.new(0, 8)
+        Corner.CornerRadius = UDim.new(0, 12)
         Corner.Parent = TabButton
 
         local Content = Instance.new("Frame")
@@ -118,17 +115,16 @@ function Fantom:CreateWindow(config)
             end
             for _, btn in pairs(TabBar:GetChildren()) do
                 if btn:IsA("TextButton") then
-                    btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+                    btn.BackgroundColor3 = Color3.fromRGB(90, 72, 140)
                 end
             end
 
             Content.Visible = true
-            TabButton.BackgroundColor3 = Color3.fromRGB(60, 90, 150)
+            TabButton.BackgroundColor3 = Color3.fromRGB(65, 50, 100)
         end
 
         TabButton.MouseButton1Click:Connect(ActivateTab)
 
-        -- เปิด Tab แรกอัตโนมัติ
         if #ContentHolder:GetChildren() == 1 then
             ActivateTab()
         end
